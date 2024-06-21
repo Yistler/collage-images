@@ -1,0 +1,51 @@
+<html>
+
+<head>
+    <script type="text/javascript" src="https://unpkg.com/webcam-easy/dist/webcam-easy.min.js"></script>
+</head>
+
+<body>
+    <video id="webcam" autoplay playsinline width="640" height="480"></video>
+    <canvas id="canvas" class="d-none"></canvas>
+    <audio id="snapSound" src="audio/snap.wav" preload="auto"></audio>
+
+    <button id="start-cam">Encender Cámara</button>
+    <button id="take-photo">Tomar Foto</button>
+    <a id="download-photo" download="webcam-photo.png"><button>Descargar Foto</button></a>
+    <button id="end-cam">Apagar Camara</button>
+
+    <script>
+        const webcamElement = document.getElementById('webcam');
+        const canvasElement = document.getElementById('canvas');
+        const snapSoundElement = document.getElementById('snapSound');
+        const webcam = new Webcam(webcamElement, 'user', canvasElement, snapSoundElement);
+
+        // Evento para encender la cámara al hacer clic en el botón "Encender Cámara"
+        document.getElementById('start-cam').addEventListener('click', () => {
+            webcam.start()
+                .then(result => {
+                    console.log("Cámara encendida");
+                })
+                .catch(err => {
+                    console.log(err);
+                });
+        });
+
+        // Evento para tomar una foto al hacer clic en el botón "Tomar Foto"
+        document.getElementById('take-photo').addEventListener('click', () => {
+            let picture = webcam.snap();
+            document.getElementById('download-photo').href = picture;
+        });
+
+        // Evento para detener la cámara al salir de la página (opcional)
+        window.addEventListener('beforeunload', () => {
+            webcam.stop();
+        });
+        document.getElementById('end-cam').addEventListener('click',()=>{
+            webcam.stop();
+        })
+    </script>
+
+</body>
+
+</html>
